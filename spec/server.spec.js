@@ -16,8 +16,8 @@ describe("get messages", () => {
   })
   it("should return a list, that's not empty", done => {
     request.get("http://localhost:3000/messages", (err, response) => {
-      console.log(response.body)
-      expect(response.body.length).toBeGreaterThan(0)
+      // console.log(response.body)
+      expect(response.body.length).toBeGreaterThan(40)
       done()
     })
   })
