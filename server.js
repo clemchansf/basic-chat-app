@@ -33,24 +33,33 @@ app.post("/messages", (req, res) => {
   // console.log(req.body)
   if (!Boolean(req.body.target)) {
     var message = new Message(req.body)
-    message.save(err => {
-      if (err) {
-        res.sendStatus(500)
-      }
-
-      Message.findOne({ message: "badword" }, (err, censored) => {
+    message
+      .save()
+      .then(() => {
+        console.log("saved")
+        return Message.findOne({ message: "badword" })
+      })
+      .then(censored => {
         if (censored) {
           console.log("censored word found", censored)
-          Message.deleteOne({ _id: censored.id }, err => {
-            console.log("removed censored word")
-          })
+          // Message.deleteOne({ _id: censored.id }, err => {
+          //   console.log("removed censored word")
+          // })
+          // since err will go to the catch block, we can remove it here
+          return Message.deleteOne({ _id: censored.id })
         }
-      })
 
-      // messages.push(req.body)
-      io.emit("message", req.body)
-      res.sendStatus(200)
-    })
+        // because of the return above in the censored block
+        // emit will no longer send to the client to render it
+        // on the browser and then re-render later, which makes
+        // the process more efficient (one less step)
+        io.emit("message", req.body)
+        res.sendStatus(200)
+      })
+      .catch(err => {
+        res.sendStatus(500)
+        return console.error(err)
+      })
   } else {
     res.sendStatus(404)
   }
