@@ -39,3 +39,13 @@ describe("get messages from a user", () => {
     })
   })
 })
+
+describe("delete messages from a user", () => {
+  it("should return 200 ok", done => {
+    request.delete("http://localhost:3000/messages/tim", (err, res) => {
+      // console.log("statusCode from response", response.statusCode)
+      expect(res.statusCode).toEqual(200)
+      done()
+    })
+  })
+})
