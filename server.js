@@ -60,6 +60,12 @@ app.post("/messages", async (req, res) => {
   }
 })
 
+app.post("/messages/:user", async (req, res) => {
+  Message.find({}, (err, messages) => {
+    res.send(messages)
+  })
+})
+
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true }, err => {
   console.log("mongodb connected", err)
 })
