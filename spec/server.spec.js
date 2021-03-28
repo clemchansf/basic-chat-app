@@ -22,3 +22,13 @@ describe("get messages", () => {
     })
   })
 })
+
+describe("get messages from a user", () => {
+  it("should return 200 ok", done => {
+    request.get("http://localhost:3000/messages/tim", (err, response) => {
+      console.log("statusCode from response", response.statusCode)
+      expect(response.statusCode == 200).toBe(true)
+      done()
+    })
+  })
+})
