@@ -30,30 +30,33 @@ app.get("/messages", (req, res) => {
 })
 
 app.post("/messages", async (req, res) => {
-  if (!Boolean(req.body.target)) {
-    var message = new Message(req.body)
-    var savedMessage = await message.save()
-    console.log("saved")
-    var censored = await Message.findOne({ message: "badword" })
-    if (censored) {
-      console.log("censored word found", censored)
-      // Message.deleteOne({ _id: censored.id }, err => {
-      //   console.log("removed censored word")
-      // })
-      // since err will go to the catch block, we can remove it here
-      await Message.deleteOne({ _id: censored.id })
+  try {
+    if (!Boolean(req.body.target)) {
+      var message = new Message(req.body)
+      var savedMessage = await message.save()
+      console.log("saved")
+      var censored = await Message.findOne({ message: "badword" })
+      if (censored) {
+        console.log("censored word found", censored)
+        // Message.deleteOne({ _id: censored.id }, err => {
+        //   console.log("removed censored word")
+        // })
+        // since err will go to the catch block, we can remove it here
+        await Message.deleteOne({ _id: censored.id })
+      } else {
+        io.emit("message", req.body)
+      }
+      res.sendStatus(200)
     } else {
-      io.emit("message", req.body)
+      res.sendStatus(404)
     }
-
-    res.sendStatus(200)
-
-    // .catch(err => {
-    //   res.sendStatus(500)
-    //   return console.error(err)
-    // })
-  } else {
-    res.sendStatus(404)
+  } catch (err) {
+    res.sendStatus(500)
+    return console.error(err)
+  } finally {
+    // logger.log("message post called")
+    // or close connection to database
+    console.log("message post called")
   }
 })
 
