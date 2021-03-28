@@ -60,7 +60,7 @@ app.post("/messages", async (req, res) => {
   }
 })
 
-app.post("/messages/:user", async (req, res) => {
+app.get("/messages/:user", (req, res) => {
   Message.find({}, (err, messages) => {
     res.send(messages)
   })
