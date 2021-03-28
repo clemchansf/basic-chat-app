@@ -67,6 +67,18 @@ app.get("/messages/:user", (req, res) => {
   })
 })
 
+app.delete("/messages/tim", (req, res) => {
+  var user = req.params.user
+  Message.deleteMany({ name: user }, (err, messages) => {
+    if (err) {
+      res.sendStatus(204)
+    } else {
+      res.send(200)
+    }
+    console.log("delete users", err)
+  })
+})
+
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true }, err => {
   console.log("mongodb connected", err)
 })
