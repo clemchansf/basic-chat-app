@@ -31,4 +31,11 @@ describe("get messages from a user", () => {
       done()
     })
   })
+  it("name should be tim", done => {
+    request.get("http://localhost:3000/messages/tim", (err, res) => {
+      // console.log("statusCode from response", response.statusCode)
+      expect(JSON.parse(res.body)[0].name).toEqual("tim")
+      done()
+    })
+  })
 })
